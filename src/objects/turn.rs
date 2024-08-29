@@ -1,3 +1,5 @@
+use crate::objects::demon::Demon;
+
 pub struct Turn {
     id: usize,
     stamina_start: usize,
@@ -5,7 +7,7 @@ pub struct Turn {
     fragments_start: usize,
     fragments_end: usize,
     fight: bool,
-    demon_id_fight: usize,
+    demon_to_fight: Demon,
 }
 
 impl Turn {
@@ -13,7 +15,7 @@ impl Turn {
         id: usize,
         stamina_start: usize,
         fragments_start: usize,
-        demon_id_fight: usize,
+        demon_to_fight: Demon,
     ) -> Turn {
         let fight = false;
         let fragments_end = 0;
@@ -25,7 +27,7 @@ impl Turn {
             fragments_start,
             fragments_end,
             fight,
-            demon_id_fight,
+            demon_to_fight,
         }
     }
 
@@ -57,15 +59,19 @@ impl Turn {
         self.fragments_end = fragments_end;
     }
 
+    pub fn set_demon_end(&mut self, demon_end: Demon) {
+        self.demon_to_fight = demon_end;
+    }
+
+    pub fn get_demon_to_fight(&mut self) -> Demon {
+        self.demon_to_fight.clone()
+    }
+
     pub fn is_fight(&self) -> bool {
         self.fight
     }
 
     pub fn set_fight(&mut self, fight: bool) {
         self.fight = fight;
-    }
-
-    pub fn get_demon_id_fight(&self) -> usize {
-        self.demon_id_fight
     }
 }

@@ -9,7 +9,9 @@ pub struct Battle {
     turns: Vec<Turn>,
     nb_demons: usize,
     demons: Vec<Demon>,
+    killed_demons: Vec<Demon>,
     fragments: usize,
+    nb_demons_kill: usize,
     demons_order: Vec<usize>, 
 }
 
@@ -23,8 +25,10 @@ impl Battle {
         demons_order: Vec<usize>, 
     ) -> Battle {
         let turns: Vec<Turn> = vec![];
+        let killed_demons: Vec<Demon> = vec![];
         let current_turn = 0;
         let fragments = 0;
+        let nb_demons_kill = 0;
         Battle {
             stamina,
             max_stamina,
@@ -33,7 +37,9 @@ impl Battle {
             turns,
             nb_demons,
             demons,
+            killed_demons,
             fragments,
+            nb_demons_kill,
             demons_order, 
         }
     }
@@ -42,8 +48,12 @@ impl Battle {
         self.fragments += fragments;
     }
 
-    pub fn next_turn(&mut self, turn: Turn) -> bool {
+    pub fn next_turn(&mut self, mut turn: Turn) -> bool {
         if self.current_turn < self.max_turn {
+            if turn.is_fight() {
+                self.nb_demons_kill += 1;
+                self.killed_demons.push(turn.get_demon_to_fight());
+            }
             self.current_turn += 1;
             self.turns.push(turn);
             return true;
@@ -53,6 +63,14 @@ impl Battle {
 
     pub fn get_demon(&self, id: usize) -> Demon {
         self.demons[id].clone()
+    }
+
+    pub fn get_killed_demons(&self) -> Vec<Demon> {
+        self.killed_demons.clone()
+    }
+
+    pub fn get_nb_demons_kill(&self) -> usize {
+        self.nb_demons_kill
     }
 
     pub fn get_demon_id_from_demons_order(&self, next_demon: usize) -> usize {
@@ -86,8 +104,8 @@ impl Battle {
         self.max_turn
     }
 
-    pub fn get_turns(&self) -> &Vec<Turn> {
-        &self.turns
+    pub fn get_turns(&mut self) -> &mut Vec<Turn> {
+        &mut self.turns
     }
 
     pub fn get_nb_demons(&self) -> usize {

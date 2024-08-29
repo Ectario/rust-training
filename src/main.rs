@@ -9,6 +9,7 @@ mod objects {
 
 use crate::simulate::execute_simulation;
 use crate::parsing::get_battle_from_files;
+use crate::objects::battle::Battle;
 
 /*
 input path & output path needed 
@@ -24,22 +25,15 @@ fn simulation(){
 }
 
 fn main() {
-    use rust_training::objects::demon::Demon;
- 
-    get_battle_from_files("inputs/00-example.txt", "outputs/tests/good_outputs.txt");
+    let mut battle: Battle = get_battle_from_files("inputs/00-example.txt", "outputs/tests/good_output.txt");
 
-    // let mut demon = Demon::new(
-    //     1,
-    //     500,
-    //     3,
-    //     50,
-    //     5,
-    //     vec![10, 15, 20, 25, 30],
-    // );
+    // let mut demon = battle.get_demon(0);
 
     // println!("ID: {}", demon.get_id());
     // println!("Cost: {}", demon.get_cost());
     // println!("Fragments by Turn: {:?}", demon.get_fragments_by_turn());
-    // demon.fight(100, 0);
-    // println!("Fragments on Turn 2: {:?}", demon.get_fragments(9));
+    // // demon.fight(100, 0);
+    // println!("Fragments on Turn 2: {:?}", demon.get_fragments(2));
+
+    execute_simulation(battle);
 }
