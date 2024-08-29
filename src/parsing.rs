@@ -11,10 +11,10 @@ fn parse_value(value: &str, field_name: &str) -> usize {
 pub fn get_battle_from_files(input_file_path: &str, output_file_path: &str) -> Battle {
     let binding = fs::read_to_string(input_file_path).expect("Should have been able to read the file");
     let mut lines = binding.lines();
-    let mut stamina = 0;
-    let mut max_stamina = 0;
-    let mut max_turn = 0;
-    let mut nb_demons = 0;
+    let stamina: usize;
+    let max_stamina: usize;
+    let max_turn: usize;
+    let nb_demons: usize;
     let mut demons: Vec<Demon>= vec![];
     let mut id = 0;
 

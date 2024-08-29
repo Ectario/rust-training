@@ -3,10 +3,7 @@ use crate::objects::turn::Turn;
 use crate::objects::battle::Battle;
 
 
-/*
-
-*/
-pub fn execute_simulation(mut battle: Battle){
+pub fn execute_simulation(mut battle: Battle) -> Battle {
     for id_turn in 0..battle.get_max_turn() {
 
         let kill = battle.get_nb_demons_kill();
@@ -52,18 +49,6 @@ pub fn execute_simulation(mut battle: Battle){
         turn.set_demon_end(demon_to_fight);
         battle.next_turn(turn);
     }
-
-    for turn in battle.get_turns() {
-        let demon = turn.get_demon_to_fight();
-        println!("Turn {}", turn.get_id());
-        println!("[DEMON] ID: {}", demon.get_id());
-        println!("[DEMON] Cost: {}", demon.get_cost());
-        println!("[DEMON] Fragments by Turn: {:?}", demon.get_fragments_by_turn());
-        println!("Stamina Start: {}", turn.get_stamina_start());
-        println!("Stamina End: {}", turn.get_stamina_end());
-        println!("Fragments Start: {}", turn.get_fragments_start());
-        println!("Fragments End: {}", turn.get_fragments_end());
-        println!("--------------------------");
-    }
     
+    return battle;
 }

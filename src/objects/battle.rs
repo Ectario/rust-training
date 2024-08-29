@@ -1,6 +1,7 @@
 use crate::objects::turn::Turn;
 use crate::objects::demon::Demon;
 
+#[allow(dead_code)]
 pub struct Battle {
     stamina: usize,
     max_stamina: usize,
@@ -82,7 +83,9 @@ impl Battle {
     }
 
     pub fn add_stamina(&mut self, stamina: usize) {
-        self.stamina += stamina;
+        if self.get_max_stamina() <= self.get_stamina() + stamina {
+            self.stamina += stamina;
+        }
     }
 
     pub fn sub_stamina(&mut self, stamina: usize) {
@@ -96,10 +99,6 @@ impl Battle {
         self.max_stamina
     }
 
-    pub fn get_current_turn(&self) -> usize {
-        self.current_turn
-    }
-
     pub fn get_max_turn(&self) -> usize {
         self.max_turn
     }
@@ -108,6 +107,7 @@ impl Battle {
         &mut self.turns
     }
 
+    #[allow(dead_code)]
     pub fn get_nb_demons(&self) -> usize {
         self.nb_demons
     }
