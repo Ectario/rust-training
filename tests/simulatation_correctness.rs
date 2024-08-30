@@ -4,6 +4,20 @@ use rust_training::objects::battle::Battle;
 use rust_training::objects::demon::Demon;
 use std::cmp;
 
+fn calculate_score_and_test(input_file: &str, output_file: &str, expected_score: usize) {
+    let mut battle: Battle = get_battle_from_files(input_file, output_file);
+    battle = execute_simulation(battle);
+    let mut score = 0;
+    for demon in battle.get_killed_demons() {
+        let nb_rewards = cmp::min(demon.get_nb_earning_turns(), battle.get_max_turn() - demon.get_death_turn()); 
+        for i in 0..nb_rewards {
+            score += demon.get_fragments_by_turn()[i];
+        }
+    }
+    assert_eq!(score, expected_score);
+    assert_eq!(score, battle.get_fragments());
+}
+
 #[cfg(test)]
 mod simulation_tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -163,32 +177,12 @@ mod simulation_tests {
 
     #[test]
     fn test_final_score_good() {
-        let mut battle: Battle = get_battle_from_files("inputs/00-example-waste.txt", "outputs/tests/good_output.txt");
-        battle = execute_simulation(battle);
-        let mut score = 0;
-        for demon in battle.get_killed_demons() {
-            let nb_rewards = cmp::min(demon.get_nb_earning_turns(), battle.get_max_turn() - demon.get_death_turn()); // the -1 from the subject sum need to be removed since here the turns are starting from 0 and not 1 like in the example
-            for i in 0..nb_rewards {
-                score += demon.get_fragments_by_turn()[i];
-            }
-        }
-        assert_eq!(score, 40);
-        assert_eq!(score, battle.get_fragments());
+        calculate_score_and_test("inputs/00-example-waste.txt", "outputs/tests/good_output.txt", 40);
     }
 
     #[test]
     fn test_final_score_good_2() {
-        let mut battle: Battle = get_battle_from_files("inputs/00-example.txt", "outputs/tests/good_output.txt");
-        battle = execute_simulation(battle);
-        let mut score = 0;
-        for demon in battle.get_killed_demons() {
-            let nb_rewards = cmp::min(demon.get_nb_earning_turns(), battle.get_max_turn() - demon.get_death_turn()); // the -1 from the subject sum need to be removed since here the turns are starting from 0 and not 1 like in the example
-            for i in 0..nb_rewards {
-                score += demon.get_fragments_by_turn()[i];
-            }
-        }
-        assert_eq!(score, 120);
-        assert_eq!(score, battle.get_fragments());
+        calculate_score_and_test("inputs/00-example.txt", "outputs/tests/good_output.txt", 120);
     }
 
 }
