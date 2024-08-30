@@ -63,7 +63,7 @@ impl Demon {
         return 0;
     }
 
-    fn get_death_turn(&self) -> usize {
+    pub fn get_death_turn(&self) -> usize {
         self.death_turn
     }
 
@@ -94,7 +94,5 @@ impl Demon {
     pub fn get_fragments_by_turn(&self) -> &Vec<usize> {
         &self.fragments_by_turn
     }
-
-    
 
 }
