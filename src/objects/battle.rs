@@ -83,7 +83,7 @@ impl Battle {
     }
 
     pub fn add_stamina(&mut self, stamina: usize) {
-        if self.get_max_stamina() <= self.get_stamina() + stamina {
+        if self.get_max_stamina() >= self.get_stamina() + stamina {
             self.stamina += stamina;
         }
     }
@@ -107,7 +107,6 @@ impl Battle {
         &mut self.turns
     }
 
-    #[allow(dead_code)]
     pub fn get_nb_demons(&self) -> usize {
         self.nb_demons
     }
@@ -116,5 +115,4 @@ impl Battle {
         self.fragments
     }
 
-    
 }
