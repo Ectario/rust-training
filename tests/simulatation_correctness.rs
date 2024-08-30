@@ -173,6 +173,7 @@ mod simulation_tests {
             }
         }
         assert_eq!(score, 40);
+        assert_eq!(score, battle.get_fragments());
     }
 
     #[test]
@@ -187,6 +188,7 @@ mod simulation_tests {
             }
         }
         assert_eq!(score, 120);
+        assert_eq!(score, battle.get_fragments());
     }
 
 }
