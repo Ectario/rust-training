@@ -16,10 +16,9 @@ pub fn execute_simulation(mut battle: Battle) -> Battle {
             earned_stamina += demon.recover_stamina(id_turn);
         }
 
-        battle.add_stamina(earned_stamina);
+        let wasted_stamina = battle.add_stamina(earned_stamina);
 
         let mut turn = Turn::new(id_turn, battle.get_stamina(), battle.get_fragments(), demon_to_fight.clone());
-
         
         // if true then FIGHT!
         let player_stamina = battle.get_stamina();
@@ -47,6 +46,7 @@ pub fn execute_simulation(mut battle: Battle) -> Battle {
         turn.set_stamina_end(battle.get_stamina());
         turn.set_fragments_end(battle.get_fragments());
         turn.set_demon_end(demon_to_fight);
+        turn.set_wasted_stamina_during_turn(wasted_stamina);
         battle.next_turn(turn);
     }
     

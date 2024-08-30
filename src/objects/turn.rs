@@ -8,6 +8,7 @@ pub struct Turn {
     fragments_end: usize,
     fight: bool,
     demon_to_fight: Demon,
+    wasted_stamina: usize,
 }
 
 impl Turn {
@@ -20,6 +21,7 @@ impl Turn {
         let fight = false;
         let fragments_end = 0;
         let stamina_end = 0;
+        let wasted_stamina = 0;
         Turn {
             id,
             stamina_start,
@@ -28,6 +30,7 @@ impl Turn {
             fragments_end,
             fight,
             demon_to_fight,
+            wasted_stamina,
         }
     }
 
@@ -45,6 +48,14 @@ impl Turn {
 
     pub fn set_stamina_end(&mut self, stamina_end: usize) {
         self.stamina_end = stamina_end;
+    }
+
+    pub fn set_wasted_stamina_during_turn(&mut self, wasted_stamina: usize) {
+        self.wasted_stamina = wasted_stamina;
+    }
+
+    pub fn get_wasted_stamina(&mut self) -> usize {
+        self.wasted_stamina
     }
 
     pub fn get_fragments_start(&self) -> usize {

@@ -82,10 +82,15 @@ impl Battle {
         self.stamina
     }
 
-    pub fn add_stamina(&mut self, stamina: usize) {
+
+    pub fn add_stamina(&mut self, stamina: usize) -> usize {
         if self.get_max_stamina() >= self.get_stamina() + stamina {
             self.stamina += stamina;
-        }
+            return 0;
+        } 
+        let wasted_stamina = (self.get_stamina() + stamina) - self.get_max_stamina();
+        self.stamina = self.get_max_stamina();
+        return wasted_stamina;
     }
 
     pub fn sub_stamina(&mut self, stamina: usize) {
