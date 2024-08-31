@@ -4,7 +4,7 @@ use regex::Regex;
 #[allow(dead_code)]
 pub fn check_output_charset_and_format(file_path: &str) -> bool {
     let content = fs::read_to_string(file_path).expect("Should have been able to read the file");
-    let reg = Regex::new(r"^\d\n(\d\n)*$").unwrap();
+    let reg = Regex::new(r"^\d+\n(\d+\n)*$").unwrap();
     reg.is_match(&content)
 }
 

@@ -1,21 +1,47 @@
-mod checks;
-mod simulate;
-mod parsing;
 mod objects {
     pub mod demon;
     pub mod battle;
     pub mod turn;
 }
+mod generation {
+    pub mod gen_challenges;
+    pub mod gen_player;
+}
+mod utils {
+    pub mod checks;
+    pub mod simulate;
+    pub mod parsing;
+}
 
-use crate::checks::*;
-use crate::simulate::execute_simulation;
-use crate::parsing::get_battle_from_files;
+use crate::utils::checks::*;
+use crate::utils::simulate::execute_simulation;
+use crate::generation::gen_challenges::generate_challenges;
+use crate::generation::gen_player::generate;
+use crate::utils::parsing::get_battle_from_files;
+use crate::utils::parsing::get_battle_from_only_input;
 use crate::objects::battle::Battle;
 use std::env;
 use std::assert;
 
 fn help() {
-    println!("usage: [command] [input path] [output path]");
+    println!("Usage:");
+    println!("  [command] [options]\n");
+    
+    println!("Commands:");
+    println!("  generate                 Generate all outputs");
+    println!("  generate [challenge_id]  Generate a specific challenge output based on the given ID.");
+    println!("  simulate [input path] [output path]");
+    println!("                          Simulate the battle with the given input and output files. Prints the battle state.");
+    println!("  waste [input path] [output path]");
+    println!("                          Evaluate and print the wasted stamina and the associated turn based on the input and output files.\n");
+    
+    println!("Examples:");
+    println!("  cargo run -- generate               # Generate default challenges/outputs");
+    println!("  cargo run -- generate 2             # Generate outputs for the 2nd challenge");
+    println!("  cargo run -- simulate ./inputs/00-example.txt outputs/tests/good_output.txt");
+    println!("                                      # Simulate the battle and print the results");
+    println!("  cargo run -- waste ./inputs/00-example-waste.txt outputs/tests/good_output.txt");
+    println!("                                      # Evaluate and print wasted stamina");
 }
 
 /*
@@ -24,33 +50,17 @@ Input path & output path are required
 -> Check the output format
 -> Parse it
 -> Simulate the battle
+-> Return the final state of the battle
 
 The goal here is to evaluate the score given an input and an output.
 Example: cargo run -- simulate ./inputs/00-example.txt outputs/tests/good_output.txt
 */
-fn simulate(input_path: &str, output_path: &str) {
+fn simulate(input_path: &str, output_path: &str) -> Battle {
     assert!(check_output_charset_and_format(output_path), "[!] Bad charset or format in output path.");
     let mut battle: Battle = get_battle_from_files(input_path, output_path);
     assert!(check_output_range_and_unicity(output_path, battle.get_nb_demons()), "[!] Bad range or a unicity problem occurs in the output file.");
     battle = execute_simulation(battle);
-
-    for turn in battle.get_turns() {
-        if turn.get_id() == 0 {
-            println!("==========================");
-        }
-        let demon = turn.get_demon_to_fight();
-        println!("Turn {}", turn.get_id());
-        println!("[DEMON] ID: {}", demon.get_id());
-        println!("[DEMON] Cost: {}", demon.get_cost());
-        println!("[DEMON] Fragments by Turn: {:?}", demon.get_fragments_by_turn());
-        println!("Fight?: {}", turn.is_fight());
-        println!("Stamina Start: {}", turn.get_stamina_start());
-        println!("Stamina End: {}", turn.get_stamina_end());
-        println!("Stamina Wasted: {}", turn.get_wasted_stamina());
-        println!("Fragments Start: {}", turn.get_fragments_start());
-        println!("Fragments End: {}", turn.get_fragments_end());
-        println!("==========================");
-    }
+    return battle;
 }
 
 /*
@@ -61,8 +71,8 @@ Input path & output path are required
 
 The goal here is to generate an output file that determines the demon order needed to achieve a good score.
 */
-fn generate(input_path: &str, output_path: &str) {
-
+fn generate_outputs(gen_id: Option<usize>) {
+    generate_challenges();
 }
 
 /*
@@ -103,6 +113,36 @@ fn waste(input_path: &str, output_path: &str) {
 fn main() {
     let args: Vec<String> = env::args().collect();
     match args.len() {
+        // [binary_name] [command]
+        2 => {
+            let cmd = &args[1];
+            // parse the command
+            match &cmd[..] {
+                "generate" => generate_outputs(None),
+                _ => {
+                    eprintln!("error: invalid command for this number of args");
+                    help();
+                },
+            }
+        },
+        // [binary_name] [command] [challenge id]
+        3 => {
+            let cmd = &args[1];
+            let challenge_id = &args[2];
+            // parse the command
+            match &cmd[..] {
+                "generate" => generate_outputs(Some(
+                    match challenge_id.parse::<usize>() {
+                        Ok(n) => n,
+                        Err(_) => panic!("[!] Can't convert {} to usize.", challenge_id),
+                      }
+                )),
+                _ => {
+                    eprintln!("error: invalid command for this number of args");
+                    help();
+                },
+            }
+        },
         // [binary_name] [command] [input path] [output path]
         4 => {
             let cmd = &args[1];
@@ -110,11 +150,29 @@ fn main() {
             let output_path = &args[3];
             // parse the command
             match &cmd[..] {
-                "simulate" => simulate(input_path, output_path),
+                "simulate" => {
+                    let mut battle: Battle = simulate(input_path, output_path);
+                    for turn in battle.get_turns() {
+                        if turn.get_id() == 0 {
+                            println!("==========================");
+                        }
+                        let demon = turn.get_demon_to_fight();
+                        println!("Turn {}", turn.get_id());
+                        println!("[DEMON] ID: {}", demon.get_id());
+                        println!("[DEMON] Cost: {}", demon.get_cost());
+                        println!("[DEMON] Fragments by Turn: {:?}", demon.get_fragments_by_turn());
+                        println!("Fight?: {}", turn.is_fight());
+                        println!("Stamina Start: {}", turn.get_stamina_start());
+                        println!("Stamina End: {}", turn.get_stamina_end());
+                        println!("Stamina Wasted: {}", turn.get_wasted_stamina());
+                        println!("Fragments Start: {}", turn.get_fragments_start());
+                        println!("Fragments End: {}", turn.get_fragments_end());
+                        println!("==========================");
+                    };
+                },
                 "waste" => waste(input_path, output_path),
-                "generate" => generate(input_path, output_path),
                 _ => {
-                    eprintln!("error: invalid command");
+                    eprintln!("error: invalid command for this number of args");
                     help();
                 },
             }

@@ -70,6 +70,10 @@ impl Battle {
         self.killed_demons.clone()
     }
 
+    pub fn get_demons(&self) -> Vec<Demon> {
+        self.demons.clone()
+    }
+
     pub fn get_nb_demons_kill(&self) -> usize {
         self.nb_demons_kill
     }
@@ -81,7 +85,6 @@ impl Battle {
     pub fn get_stamina(&self) -> usize {
         self.stamina
     }
-
 
     pub fn add_stamina(&mut self, stamina: usize) -> usize {
         if self.get_max_stamina() >= self.get_stamina() + stamina {

@@ -1,4 +1,4 @@
-use rust_training::checks::*;
+use rust_training::utils::checks::*;
 
 #[cfg(test)]
 mod outputs_tests {
