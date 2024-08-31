@@ -71,11 +71,11 @@ impl Demon {
         self.death_turn = death_turn;
     }
 
-    fn get_recovery_turns(&self) -> usize {
+    pub fn get_recovery_turns(&self) -> usize {
         self.recovery_turns
     }
 
-    fn get_recovery_stamina(&self) -> usize {
+    pub fn get_recovery_stamina(&self) -> usize {
         self.recovery_stamina
     }
 

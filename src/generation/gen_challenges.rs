@@ -1,22 +1,14 @@
 use crate::objects::battle::Battle;
+use crate::objects::battle::BattleTrait;
 use crate::utils::simulate::execute_simulation;
+use crate::utils::save::save_to_file;
 use crate::get_battle_from_only_input;
 use std::fs;
-use std::io::Result;
-use std::fmt::Write;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 use kdam::tqdm;
 
-fn save_to_file(output_path: &str, demons_order: Vec<usize>) -> Result<()> {
-    let mut content = String::new();
-    for demon_id in demons_order {
-        writeln!(&mut content, "{}", demon_id.to_string()).unwrap();
-    }
-    fs::write(output_path, content)?; // reminder for me: https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator
-    Ok(())
-}
-
+#[allow(dead_code)]
 pub fn generate_challenges() {
     let input_files = [
         "inputs/01-the-cloud-abyss.txt",

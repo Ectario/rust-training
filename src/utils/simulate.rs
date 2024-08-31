@@ -1,7 +1,7 @@
 use crate::objects::demon::Demon;
 use crate::objects::turn::Turn;
 use crate::objects::battle::Battle;
-
+use crate::objects::battle::BattleTrait;
 
 pub fn execute_simulation(mut battle: Battle) -> Battle {
     for id_turn in 0..battle.get_max_turn() {

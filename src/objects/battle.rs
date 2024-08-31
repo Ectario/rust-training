@@ -16,6 +16,114 @@ pub struct Battle {
     demons_order: Vec<usize>, 
 }
 
+pub trait BattleTrait {
+    fn add_fragments(&mut self, fragments: usize);
+    fn next_turn(&mut self, turn: Turn) -> bool;
+    fn get_demon(&self, id: usize) -> Demon;
+    fn get_killed_demons(&self) -> Vec<Demon>;
+    fn get_demons(&self) -> Vec<Demon>;
+    fn get_nb_demons_kill(&self) -> usize;
+    fn get_demon_id_from_demons_order(&self, next_demon: usize) -> usize;
+    fn get_stamina(&self) -> usize;
+    fn add_stamina(&mut self, stamina: usize) -> usize;
+    fn sub_stamina(&mut self, stamina: usize);
+    fn get_max_stamina(&self) -> usize;
+    fn get_max_turn(&self) -> usize;
+    fn get_turns(&mut self) -> &mut Vec<Turn>;
+    fn get_nb_demons(&self) -> usize;
+    fn get_fragments(&self) -> usize;
+}
+
+impl BattleTrait for Battle {
+    fn add_fragments(&mut self, fragments: usize) {
+        self.fragments += fragments;
+    }
+
+    fn next_turn(&mut self, mut turn: Turn) -> bool {
+        if self.current_turn < self.max_turn {
+            if turn.is_fight() {
+                self.nb_demons_kill += 1;
+                self.killed_demons.push(turn.get_demon_to_fight());
+            }
+            self.current_turn += 1;
+            self.turns.push(turn);
+            return true;
+        }
+        return false;
+    }
+
+    fn get_demon(&self, id: usize) -> Demon {
+        self.demons[id].clone()
+    }
+
+    fn get_killed_demons(&self) -> Vec<Demon> {
+        self.killed_demons.clone()
+    }
+
+    fn get_demons(&self) -> Vec<Demon> {
+        self.demons.clone()
+    }
+
+    fn get_nb_demons_kill(&self) -> usize {
+        self.nb_demons_kill
+    }
+
+    fn get_demon_id_from_demons_order(&self, next_demon: usize) -> usize {
+        self.demons_order[next_demon]
+    }
+
+    fn get_stamina(&self) -> usize {
+        self.stamina
+    }
+
+    fn add_stamina(&mut self, stamina: usize) -> usize {
+        if self.get_max_stamina() >= self.get_stamina() + stamina {
+            self.stamina += stamina;
+            return 0;
+        }
+        let wasted_stamina = (self.get_stamina() + stamina) - self.get_max_stamina();
+        self.stamina = self.get_max_stamina();
+        return wasted_stamina;
+    }
+
+    fn sub_stamina(&mut self, stamina: usize) {
+        if self.stamina < stamina {
+            panic!("[!] Can't sub stamina, current stamina too low");
+        }
+        self.stamina -= stamina;
+    }
+
+    fn get_max_stamina(&self) -> usize {
+        self.max_stamina
+    }
+
+    fn get_max_turn(&self) -> usize {
+        self.max_turn
+    }
+
+    fn get_turns(&mut self) -> &mut Vec<Turn> {
+        &mut self.turns
+    }
+
+    fn get_nb_demons(&self) -> usize {
+        self.nb_demons
+    }
+
+    fn get_fragments(&self) -> usize {
+        self.fragments
+    }
+}
+
+pub trait BattleGenerativeTrait {
+    fn set_demon_order(&mut self, demon_order: Vec<usize>);
+}
+
+impl BattleGenerativeTrait for Battle {
+    fn set_demon_order(&mut self, demon_order: Vec<usize>) {
+        self.demons_order = demon_order;
+    }
+}
+
 impl Battle {
     pub fn new(
         stamina: usize,
@@ -44,83 +152,4 @@ impl Battle {
             demons_order, 
         }
     }
-
-    pub fn add_fragments(&mut self, fragments: usize) {
-        self.fragments += fragments;
-    }
-
-    pub fn next_turn(&mut self, mut turn: Turn) -> bool {
-        if self.current_turn < self.max_turn {
-            if turn.is_fight() {
-                self.nb_demons_kill += 1;
-                self.killed_demons.push(turn.get_demon_to_fight());
-            }
-            self.current_turn += 1;
-            self.turns.push(turn);
-            return true;
-        }
-        return false;
-    }
-
-    pub fn get_demon(&self, id: usize) -> Demon {
-        self.demons[id].clone()
-    }
-
-    pub fn get_killed_demons(&self) -> Vec<Demon> {
-        self.killed_demons.clone()
-    }
-
-    pub fn get_demons(&self) -> Vec<Demon> {
-        self.demons.clone()
-    }
-
-    pub fn get_nb_demons_kill(&self) -> usize {
-        self.nb_demons_kill
-    }
-
-    pub fn get_demon_id_from_demons_order(&self, next_demon: usize) -> usize {
-        self.demons_order[next_demon]
-    }
-
-    pub fn get_stamina(&self) -> usize {
-        self.stamina
-    }
-
-    pub fn add_stamina(&mut self, stamina: usize) -> usize {
-        if self.get_max_stamina() >= self.get_stamina() + stamina {
-            self.stamina += stamina;
-            return 0;
-        } 
-        let wasted_stamina = (self.get_stamina() + stamina) - self.get_max_stamina();
-        self.stamina = self.get_max_stamina();
-        return wasted_stamina;
-    }
-
-    pub fn sub_stamina(&mut self, stamina: usize) {
-        if self.stamina < stamina {
-            panic!("[!] Can't sub stamina, current stamina too low");
-        }
-        self.stamina -= stamina;
-    }
-
-    pub fn get_max_stamina(&self) -> usize {
-        self.max_stamina
-    }
-
-    pub fn get_max_turn(&self) -> usize {
-        self.max_turn
-    }
-
-    pub fn get_turns(&mut self) -> &mut Vec<Turn> {
-        &mut self.turns
-    }
-
-    pub fn get_nb_demons(&self) -> usize {
-        self.nb_demons
-    }
-
-    pub fn get_fragments(&self) -> usize {
-        self.fragments
-    }
-
 }

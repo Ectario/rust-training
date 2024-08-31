@@ -11,6 +11,7 @@ mod utils {
     pub mod checks;
     pub mod simulate;
     pub mod parsing;
+    pub mod save;
 }
 
 use crate::utils::checks::*;
@@ -20,6 +21,7 @@ use crate::generation::gen_player::generate;
 use crate::utils::parsing::get_battle_from_files;
 use crate::utils::parsing::get_battle_from_only_input;
 use crate::objects::battle::Battle;
+use crate::objects::battle::BattleTrait;
 use std::env;
 use std::assert;
 
@@ -72,7 +74,8 @@ Input path & output path are required
 The goal here is to generate an output file that determines the demon order needed to achieve a good score.
 */
 fn generate_outputs(gen_id: Option<usize>) {
-    generate_challenges();
+    // generate_challenges();
+    generate(gen_id);
 }
 
 /*

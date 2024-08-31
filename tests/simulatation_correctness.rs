@@ -1,6 +1,7 @@
 use rust_training::utils::simulate::execute_simulation;
 use rust_training::utils::parsing::get_battle_from_files;
 use rust_training::objects::battle::Battle;
+use rust_training::objects::battle::BattleTrait;
 use rust_training::objects::demon::Demon;
 use std::cmp;
 

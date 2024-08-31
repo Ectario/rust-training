@@ -1,5 +1,6 @@
 use crate::objects::demon::Demon;
 use crate::objects::battle::Battle;
+use crate::objects::battle::BattleTrait;
 use std::fs;
 
 fn parse_value(value: &str, field_name: &str) -> usize {
