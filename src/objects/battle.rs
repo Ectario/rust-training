@@ -13,7 +13,7 @@ pub struct Battle {
     killed_demons: Vec<Demon>,
     fragments: usize,
     nb_demons_kill: usize,
-    demons_order: Vec<usize>, 
+    demons_order:Vec<usize>, 
 }
 
 pub trait BattleTrait {
@@ -115,12 +115,17 @@ impl BattleTrait for Battle {
 }
 
 pub trait BattleGenerativeTrait {
-    fn set_demon_order(&mut self, demon_order: Vec<usize>);
+    fn add_demons_order(&mut self, new_demon: usize);
+    fn get_demons_order(&self) -> Vec<usize>;
 }
 
 impl BattleGenerativeTrait for Battle {
-    fn set_demon_order(&mut self, demon_order: Vec<usize>) {
-        self.demons_order = demon_order;
+    fn add_demons_order(&mut self, new_demon: usize) {
+        self.demons_order.push(new_demon);
+    }
+
+    fn get_demons_order(&self) -> Vec<usize> {
+        self.demons_order.clone()
     }
 }
 

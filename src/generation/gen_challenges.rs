@@ -3,7 +3,6 @@ use crate::objects::battle::BattleTrait;
 use crate::utils::simulate::execute_simulation;
 use crate::utils::save::save_to_file;
 use crate::get_battle_from_only_input;
-use std::fs;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 use kdam::tqdm;
@@ -24,7 +23,6 @@ pub fn generate_challenges() {
         "outputs/challenges/04-the-desert-of-autonomous-machines.txt",
         "outputs/challenges/05-androids-armageddon.txt"
     ];
-    let mut rng = rand::thread_rng();
     for (idx, input_file) in input_files.iter().enumerate() {
         let init_battle: Battle = get_battle_from_only_input(input_file);
         let nb_demons = init_battle.get_nb_demons();
@@ -39,8 +37,8 @@ pub fn generate_challenges() {
         range.shuffle(&mut thread_rng());
         let mut demons_order: Vec<usize> = range[0..max_turn].to_vec();
 
-        for i in tqdm!(0..nb_tries) {
-            let mut test_battle = Battle::new(
+        for _ in tqdm!(0..nb_tries) {
+            let test_battle = Battle::new(
                 initial_stamina,
                 max_stamina,
                 max_turn,

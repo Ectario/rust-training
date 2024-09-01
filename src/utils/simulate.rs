@@ -8,6 +8,7 @@ pub fn execute_simulation(mut battle: Battle) -> Battle {
 
         let kill = battle.get_nb_demons_kill();
         let demon_id_fight = battle.get_demon_id_from_demons_order(kill);
+
         let mut demon_to_fight: Demon = battle.get_demon(demon_id_fight);
 
         // earn stamina

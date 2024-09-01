@@ -16,6 +16,7 @@ mod utils {
 
 use crate::utils::checks::*;
 use crate::utils::simulate::execute_simulation;
+#[allow(unused_imports)]
 use crate::generation::gen_challenges::generate_challenges;
 use crate::generation::gen_player::generate;
 use crate::utils::parsing::get_battle_from_files;
@@ -35,7 +36,9 @@ fn help() {
     println!("  simulate [input path] [output path]");
     println!("                          Simulate the battle with the given input and output files. Prints the battle state.");
     println!("  waste [input path] [output path]");
-    println!("                          Evaluate and print the wasted stamina and the associated turn based on the input and output files.\n");
+    println!("                          Evaluate and print the wasted stamina and the associated turn based on the input and output files.");
+    println!("  score [input path] [output path]");
+    println!("                          Simulate the battle and print the final score based on the input and output files.\n");
     
     println!("Examples:");
     println!("  cargo run -- generate               # Generate default challenges/outputs");
@@ -44,6 +47,8 @@ fn help() {
     println!("                                      # Simulate the battle and print the results");
     println!("  cargo run -- waste ./inputs/00-example-waste.txt outputs/tests/good_output.txt");
     println!("                                      # Evaluate and print wasted stamina");
+    println!("  cargo run -- score ./inputs/00-example.txt outputs/tests/good_output.txt");
+    println!("                                      # Simulate the battle and print the final score");
 }
 
 /*
@@ -57,7 +62,7 @@ Input path & output path are required
 The goal here is to evaluate the score given an input and an output.
 Example: cargo run -- simulate ./inputs/00-example.txt outputs/tests/good_output.txt
 */
-fn simulate(input_path: &str, output_path: &str) -> Battle {
+pub fn simulate(input_path: &str, output_path: &str) -> Battle {
     assert!(check_output_charset_and_format(output_path), "[!] Bad charset or format in output path.");
     let mut battle: Battle = get_battle_from_files(input_path, output_path);
     assert!(check_output_range_and_unicity(output_path, battle.get_nb_demons()), "[!] Bad range or a unicity problem occurs in the output file.");
@@ -172,6 +177,10 @@ fn main() {
                         println!("Fragments End: {}", turn.get_fragments_end());
                         println!("==========================");
                     };
+                },
+                "score" => {
+                    let battle: Battle = simulate(input_path, output_path);
+                    println!("[+] Score: {}", battle.get_fragments());
                 },
                 "waste" => waste(input_path, output_path),
                 _ => {

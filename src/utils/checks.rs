@@ -14,6 +14,7 @@ pub fn check_output_range_and_unicity(file_path: &str, nb_max_demons: usize) -> 
     let content = binding.lines();
     let mut demons = vec![false; nb_max_demons];
     if content.clone().count() > nb_max_demons {
+        eprintln!("[!] Range expected ({}) < actual number of demon ({})", nb_max_demons, content.clone().count());
         return false;
     }
     for line in content {
