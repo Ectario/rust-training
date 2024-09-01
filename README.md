@@ -1,6 +1,9 @@
 # rust-training
 
 ReplyCodeChallenge 2022 - Rust training - `Less than 1 week for Zero -> Hero`
+\
+\
+_Cool Note: This project can be used to learn any programming language because you just need to place the outputs (with adequate names) in the `outputs/player/` directory and run `cargo test` to check if everything is working correctly._
 
 ## Tests
 
