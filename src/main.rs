@@ -71,7 +71,7 @@ pub fn simulate(input_path: &str, output_path: &str) -> Battle {
 }
 
 /*
-Input path & output path are required 
+Nothing required 
 
 -> Calculate an output file
 -> Save it (using the output path)
